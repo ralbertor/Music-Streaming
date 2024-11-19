@@ -1,53 +1,58 @@
 package com.example.streaming_service.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.repositorios.ArtistaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ArtistaService {
+
     @Autowired
     private ArtistaRepository artistaRepo;
-    public List<Artista> getAllArtistas(){
-        return artistaRepo.findAll();
-    }
 
-    public Artista getArtistaById(int id){
-        return artistaRepo.findById(id).orElse(null);
-
-    }
-
-    public Artista saveArtista(Artista artista){
+    public Artista crearArtista(Artista artista) {
+        if (artista.getNombre() == null || artista.getNacionalidad() == null) {
+            throw new IllegalArgumentException("Nombre y nacionalidad obligatorios");
+        }
         return artistaRepo.save(artista);
     }
-    public String deleteArtista(int id){
-        if(artistaRepo.existsById(id)){
-            artistaRepo.deleteById(id);
-            return "200 artista eliminado correctamente";
-        }
-        else return "404, el artista no existe";
-    }
-    public String deleteAllArtistas(){
-        artistaRepo.deleteAll();
-        return "200 todos los artistas eliminados correctamente";
-    }
-    public String updateArtista(Artista artista){
-        int num = artista.getId();
-        if(artistaRepo.existsById(num)){
+
+    @Transactional
+    public String updateArtista(int id, Artista artista) {
+        if (artistaRepo.existsById(id)) {
             Artista nuevoArtista = new Artista();
             nuevoArtista.setId(artista.getId());
             nuevoArtista.setNombre(artista.getNombre());
             nuevoArtista.setFechaNacimiento(artista.getFechaNacimiento());
             nuevoArtista.setNacionalidad(artista.getNacionalidad());
-            nuevoArtista.setAlbumes(artista.getAlbumes());
-            artistaRepo.save(nuevoArtista);
-            return "Artista modificado correctamente";
+            if (nuevoArtista.getAlbumes() != null) {
+                nuevoArtista.getAlbumes().clear();
+                nuevoArtista.getAlbumes().addAll(artista.getAlbumes());
+                artista.getAlbumes().forEach(album -> album.setArtista(nuevoArtista));
+            }
+            crearArtista(nuevoArtista);
+            return "200, Artista modificado correctamente";
+        } else {
+            return "400, Error al modificar el artista";
         }
-        else return "Error al modificar el artista";
+    }
+
+    @Transactional
+    public String deleteArtista(int id) {
+        if (artistaRepo.existsById(id)) {
+            artistaRepo.deleteById(id);
+            return "200 artista eliminado correctamente";
+        } else {
+            return "404, el artista no existe";
+        }
+    }
+
+    public Page<Artista> buscarArtistasPorFiltro(String filtro, Pageable pageable) {
+        return artistaRepo.buscarPorFiltro(filtro, pageable);
     }
 
 }

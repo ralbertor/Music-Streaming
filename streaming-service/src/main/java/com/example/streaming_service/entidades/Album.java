@@ -18,7 +18,7 @@ public class Album {
     private int id;
     private String titulo;
     private int anoLanzamiento;
-    private String descripción;
+    private String descripcion;
     private int numeroCanciones;
     private String urlPortada;
 

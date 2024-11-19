@@ -16,8 +16,5 @@ public class Artista {
     private String nacionalidad;
 
     @OneToMany(mappedBy = "artista")
-    private List<Album> albumes;
-
-
-    
+    private List<Album> albumes;  
 }
