@@ -27,7 +27,7 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
-    @PostMapping
+    @PostMapping("/albumes/add")
     public ResponseEntity<Album> crearAlbum(@RequestBody Album album) {
         try {
             Album nuevoAlbum = albumService.createAlbum(album);
@@ -38,7 +38,7 @@ public class AlbumController {
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/albumes/update/{id}")
     public ResponseEntity<Album> actualizarAlbum(@PathVariable int id, @RequestBody Album album) {
         Album albumActualizado = albumService.updateAlbum(id, album);
         if (albumActualizado != null) {
@@ -49,7 +49,7 @@ public class AlbumController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/albumes/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
         try {
             albumService.deleteAlbum(id);
@@ -60,7 +60,7 @@ public class AlbumController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/albumes/{id}")
     public ResponseEntity<Page<Album>> buscarAlbum(
             @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,

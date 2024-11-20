@@ -11,7 +11,6 @@ public interface GeneroRepository extends JpaRepository<Genero, Integer> {
     // Método para buscar por atributos
     @Query("SELECT a FROM Genero a WHERE"
             + "LOWER(a.nombre) LIKE LOWER(CONCAT('%', :filtro, '%')) OR "
-            + "LOWER(a.descripcion) LIKE LOWER(CONCAT('%', :filtro, '%')) OR "
             + "LOWER(a.anoOrigen) LIKE LOWER(CONCAT('%', :filtro, '%')) OR ")
     public Page<Genero> buscarPorFiltro(String filtro, Pageable pageable);
 

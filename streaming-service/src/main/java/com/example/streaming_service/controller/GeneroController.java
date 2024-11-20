@@ -28,7 +28,7 @@ public class GeneroController {
     @Autowired
     private GeneroService generoService;
 
-    @PostMapping
+    @PostMapping("/generos/add")
     public ResponseEntity<Genero> crearGenero(@RequestBody Genero genero) {
         try {
             Genero nuevoGenero = generoService.createGenero(genero);
@@ -38,7 +38,7 @@ public class GeneroController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/generos/update/{id}")
     public ResponseEntity<Genero> actualizarGenero(@PathVariable int id, @RequestBody Genero genero) {
         Genero generoActualizado = generoService.updateGenero(id, genero);
         if (generoActualizado != null) {
@@ -48,7 +48,7 @@ public class GeneroController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/generos/delete/{id}")
     public ResponseEntity<Void> eliminarGenero(@PathVariable int id) {
         try {
             generoService.deleteGenero(id);
@@ -59,7 +59,7 @@ public class GeneroController {
 
     }
 
-    @GetMapping
+    @GetMapping("/generos/{id}")
     public ResponseEntity<Page<Genero>> buscarGenero(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {

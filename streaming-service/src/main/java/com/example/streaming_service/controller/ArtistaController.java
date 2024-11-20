@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.service.ArtistaService;
 
-
 @RestController
 @RequestMapping("/api/artistas")
 public class ArtistaController {
@@ -27,46 +26,45 @@ public class ArtistaController {
     @Autowired
     private ArtistaService artistaService;
 
-    @PostMapping
+    @PostMapping("/artistas/add")
     public ResponseEntity<Artista> crearArtista(@RequestBody Artista artista) {
-        try{
+        try {
             Artista nuevoArtista = artistaService.createArtista(artista);
             return new ResponseEntity<>(nuevoArtista, HttpStatus.CREATED);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/artistas/update/{id}")
     public ResponseEntity<Artista> actualizarArtista(@PathVariable int id, @RequestBody Artista artista) {
         Artista artistaActualizado = artistaService.updateArtista(id, artista);
-        if(artistaActualizado !=null){
+        if (artistaActualizado != null) {
             return ResponseEntity.ok(artistaActualizado);
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/artistas/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
-       try {
+        try {
             artistaService.deleteArtista(id);
-            return ResponseEntity.noContent().build();       
-       } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-       }
-    
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
     }
 
-    @GetMapping
+    @GetMapping("/artistas/{id}")
     public ResponseEntity<Page<Artista>> buscarArtistas(
-        @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-    @RequestParam(value = "page", defaultValue = "0") int page,
-    @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Artista> artistas = artistaService.buscarArtistasPorFiltro(filtro, pageable);
         return ResponseEntity.ok(artistas);
     }
-    
 
 }

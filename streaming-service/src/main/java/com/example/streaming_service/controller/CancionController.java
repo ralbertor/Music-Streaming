@@ -23,16 +23,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
 @RestController
 @RequestMapping("/api/canciones")
 public class CancionController {
+
     @Autowired
     private CancionService cancionService;
 
-    @PostMapping
+    @PostMapping("/canciones/add")
     public ResponseEntity<Cancion> crearCancion(@RequestBody Cancion cancion) {
         try {
             Cancion nuevaCancion = cancionService.createCancion(cancion);
@@ -41,19 +39,19 @@ public class CancionController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
-    @PutMapping("/{id}")
+
+    @PutMapping("/canciones/update/{id}")
     public ResponseEntity<Cancion> actualizarCancion(@PathVariable int id, @RequestBody Cancion cancion) {
         Cancion cancionActualizada = cancionService.updateCancion(id, cancion);
-        if(cancionActualizada != null){
+        if (cancionActualizada != null) {
             return ResponseEntity.ok(cancionActualizada);
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCancion(@PathVariable int id){
+    @DeleteMapping("/canciones/delete/{id}")
+    public ResponseEntity<Void> eliminarCancion(@PathVariable int id) {
         try {
             cancionService.deleteCancion(id);
             return ResponseEntity.noContent().build();
@@ -62,14 +60,14 @@ public class CancionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-    @GetMapping
-    public ResponseEntity<Page<Cancion>> buscarCancion( @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-    @RequestParam(value = "page", defaultValue = "0") int page,
-    @RequestParam(value = "size", defaultValue = "10") int size) {
+
+    @GetMapping("/canciones/{id}")
+    public ResponseEntity<Page<Cancion>> buscarCancion(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cancion> canciones = cancionService.buscarCancionPorFiltro(filtro, pageable);
         return ResponseEntity.ok(canciones);
     }
-    
 
 }
