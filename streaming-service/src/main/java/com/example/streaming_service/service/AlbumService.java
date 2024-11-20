@@ -16,14 +16,15 @@ public class AlbumService {
     @Autowired
     private AlbumRepository albumRepo;
 
-    public Album crearAlbum(Album album) {
+    public Album createAlbum(Album album) {
         if (album.getTitulo() == null || album.getAnoLanzamiento() == 0) {
             throw new IllegalArgumentException("titulo y año de lanzamiento obligatorios");
         }
         return albumRepo.save(album);
     }
+
     @Transactional
-    public String updateAlbum(int id,Album album) {
+    public Album updateAlbum(int id, Album album) {
         if (albumRepo.existsById(id)) {
             Album nuevoAlbum = new Album();
             nuevoAlbum.setId(album.getId());
@@ -39,19 +40,20 @@ public class AlbumService {
                 nuevoAlbum.getCanciones().addAll(album.getCanciones());
                 album.getCanciones().forEach(cancion -> cancion.setAlbum(nuevoAlbum));
             }
-            crearAlbum(nuevoAlbum);
-            return "200 Album modificado correctamente";
+            createAlbum(nuevoAlbum);
+            return nuevoAlbum;
         } else {
-            return "400 Error al modificar el album";
+            return null;
         }
     }
+
     @Transactional
-    public String deleteAlbum(int id) {
+    public void deleteAlbum(int id) {
         if (albumRepo.existsById(id)) {
             albumRepo.deleteById(id);
-            return "200 álbum eliminado correctamente";
+            System.out.println("200 álbum eliminado correctamente");
         } else {
-            return "400, el álbum no existe";
+             System.out.println("400, el álbum no existe");
         }
     }
 

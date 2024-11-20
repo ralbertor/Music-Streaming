@@ -1,12 +1,14 @@
 package com.example.streaming_service.service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.streaming_service.entidades.Cancion;
 import com.example.streaming_service.repositorios.CancionRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CancionService {
@@ -21,9 +23,9 @@ public class CancionService {
         }
         return cancionRepo.save(cancion);
     }
-    public String updateCancion(Cancion cancion){
-        int num = cancion.getId();
-        if(cancionRepo.existsById(num)){
+    @Transactional
+    public Cancion updateCancion(int id, Cancion cancion){
+        if(cancionRepo.existsById(id)){
             Cancion nuevaCancion = new Cancion();
             nuevaCancion.setId(cancion.getId());
             nuevaCancion.setTitulo(cancion.getTitulo());
@@ -31,16 +33,17 @@ public class CancionService {
             nuevaCancion.setUrlCancion(cancion.getUrlCancion());
             nuevaCancion.setAlbum(cancion.getAlbum());
             createCancion(nuevaCancion);
-            return "200 Canción modificada correctamente";
+            return nuevaCancion;
         }
-        else return "400 Error al modificar la canción";
+        else return null;
     }
-    public String deleteCancion(int id){
+    @Transactional
+    public void deleteCancion(int id){
         if(cancionRepo.existsById(id)){
             cancionRepo.deleteById(id);
-            return "200 canción eliminada correctamente";
+            System.out.println("200 canción eliminada correctamente");
         }
-        else return "400, la canción no existe";
+        else System.out.println("400, la canción no existe");
     }
     
     public Page<Cancion> buscarCancionPorFiltro(String filtro, Pageable pageable){

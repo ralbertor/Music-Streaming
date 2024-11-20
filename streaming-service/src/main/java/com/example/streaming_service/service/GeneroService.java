@@ -1,9 +1,10 @@
 package com.example.streaming_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 import com.example.streaming_service.entidades.Genero;
 import com.example.streaming_service.repositorios.GeneroRepository;
 
@@ -23,7 +24,7 @@ public class GeneroService {
     }
 
     @Transactional
-    public String updateGenero(int id, Genero genero) {
+    public Genero updateGenero(int id, Genero genero) {
         if (generoRepo.existsById(id)) {
             Genero nuevoGenero = new Genero();
             nuevoGenero.setId(genero.getId());
@@ -31,20 +32,20 @@ public class GeneroService {
             nuevoGenero.setDescripcion(genero.getDescripcion());
             nuevoGenero.setAnoOrigen(genero.getAnoOrigen());
             createGenero(nuevoGenero);
-            return "200 Género modificado correctamente";
+            return nuevoGenero;
 
         } else {
-            return "400 Error al modificar el género";
+            return null;
         }
     }
 
     @Transactional
-    public String removeGenero(int id) {
+    public void deleteGenero(int id) {
         if (generoRepo.existsById(id)) {
             generoRepo.deleteById(id);
-            return "200 género eliminado correctamente";
+            System.out.println("200 género eliminado correctamente");
         } else {
-            return "400 el género no existe";
+            System.out.println("400 el género no existe");
         }
     }
 
