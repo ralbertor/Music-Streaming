@@ -34,7 +34,7 @@ public class Album {
     private String urlPortada;
 
     @ManyToOne
-    @JoinColumn(name = "artista_id")
+    @JoinColumn(name = "artistaId")
     private Artista artista;
 
     @OneToMany(mappedBy = "album")
