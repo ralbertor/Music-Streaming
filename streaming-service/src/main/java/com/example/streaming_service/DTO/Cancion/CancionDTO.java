@@ -2,6 +2,8 @@ package com.example.streaming_service.DTO.Cancion;
 
 import java.util.List;
 
+import com.example.streaming_service.entidades.Genero;
+
 import lombok.Data;
 @Data
 public class CancionDTO {
@@ -10,7 +12,7 @@ public class CancionDTO {
     private String urlCancion;
     //private List<CancionArtistaDTO> artistas;
     //private CancionAlbumDTO album;
-    private List<Integer> generosIds;
+    private List<Genero> generos;
 
     
 }
