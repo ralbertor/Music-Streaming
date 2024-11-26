@@ -2,6 +2,7 @@ package com.example.streaming_service.entidades;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 
 @Entity
 @Data
@@ -37,7 +39,7 @@ public class Album {
     @JoinColumn(name = "artistaId")
     private Artista artista;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Cancion> canciones;
 
 }

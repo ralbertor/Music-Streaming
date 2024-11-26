@@ -3,6 +3,7 @@ package com.example.streaming_service.entidades;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,20 +23,25 @@ public class Artista {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
-    @Column(name = "NOMBRE")
+
+    @Column(name = "NOMBRE", nullable = false)
     private String nombre;
-    @Column(name = "FECHANACIMIENTO")
+
+    @Column(name = "FECHANACIMIENTO", nullable = false)
     private Date fechaNacimiento;
-    @Column(name = "NACIONALIDAD")
+
+    @Column(name = "NACIONALIDAD", nullable = false)
     private String nacionalidad;
 
-    @OneToMany(mappedBy = "artista")
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
     private List<Album> albumes;
 
     @ManyToMany
-    @JoinTable(name = "artistaCancion", joinColumns =
-    @JoinColumn(name = "artistaId"), inverseJoinColumns =
-    @JoinColumn(name = "cancionId") )
+    @JoinTable(
+        name = "artista_cancion",
+        joinColumns = @JoinColumn(name = "artista_id"),
+        inverseJoinColumns = @JoinColumn(name = "cancion_id")
+    )
     private List<Cancion> canciones;
 
 }

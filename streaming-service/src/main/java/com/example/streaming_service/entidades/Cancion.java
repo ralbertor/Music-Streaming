@@ -1,17 +1,17 @@
 package com.example.streaming_service.entidades;
 
-import java.sql.Time;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -24,18 +24,22 @@ public class Cancion {
     @Column(name="TITULO")
     private String titulo;
     @Column(name="DURACION")
-    private Time duracion;
+    private int duracion;
     @Column(name="URLCANCION")
     private String urlCancion;
 
-    @ManyToMany(mappedBy= "canciones")
+    @ManyToMany(targetEntity = Artista.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Artista> artistas;
 
     @ManyToOne
-    @JoinColumn(name = "albumId")
     private Album album;
 
-   @OneToMany(mappedBy="cancion")
+   @ManyToMany
+    @JoinTable(
+        name = "CANCION_GENERO",
+        joinColumns = @JoinColumn(name = "cancion_id"),
+        inverseJoinColumns = @JoinColumn(name = "genero_id")
+    )
     private List<Genero> generos;
    
 }

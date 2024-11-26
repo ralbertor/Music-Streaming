@@ -1,7 +1,8 @@
 package com.example.streaming_service.controller;
 
-import org.springframework.data.domain.Page;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Artista.ArtistaAlbumCancionDTO;
+import com.example.streaming_service.DTO.Artista.ArtistaDTO;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.service.ArtistaService;
 
@@ -25,22 +28,44 @@ public class ArtistaController {
 
     @Autowired
     private ArtistaService artistaService;
+    @Autowired
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    private ArtistaDTO convertToDTO(Artista artista) {
+        return modelMapper.map(artista, ArtistaDTO.class);
+    }
+
+    private Artista convertToEntity(ArtistaDTO artistaDTO) {
+        return modelMapper.map(artistaDTO, Artista.class);
+    }
 
     @PostMapping("/artistas/add")
-    public ResponseEntity<Artista> crearArtista(@RequestBody Artista artista) {
+    public ResponseEntity<ArtistaDTO> crearArtista(@RequestBody ArtistaDTO artistaDTO) {
         try {
+            Artista artista = convertToEntity(artistaDTO);
             Artista nuevoArtista = artistaService.createArtista(artista);
-            return new ResponseEntity<>(nuevoArtista, HttpStatus.CREATED);
+            ArtistaDTO nuevoArtistaDTO = convertToDTO(nuevoArtista);
+            return new ResponseEntity<>(nuevoArtistaDTO, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @PostMapping("/artistas/crearConAlbumYCanciones")
+    public ResponseEntity<Artista> crearArtistaConAlbumYCanciones(
+        @RequestBody ArtistaAlbumCancionDTO artistaDTO) {
+        Artista artista = artistaService.createArtistaWithAlbumCanciones(artistaDTO.getArtista(), artistaDTO.getAlbumes(), artistaDTO.getCanciones());
+        
+        return new ResponseEntity<>(artista, HttpStatus.CREATED);
+    }
+    
     @PutMapping("/artistas/update/{id}")
-    public ResponseEntity<Artista> actualizarArtista(@PathVariable int id, @RequestBody Artista artista) {
+    public ResponseEntity<ArtistaDTO> actualizarArtista(@PathVariable int id, @RequestBody ArtistaDTO artistaDTO) {
+
+        Artista artista = convertToEntity(artistaDTO);
         Artista artistaActualizado = artistaService.updateArtista(id, artista);
         if (artistaActualizado != null) {
-            return ResponseEntity.ok(artistaActualizado);
+            ArtistaDTO artistaActualizadoDTO = convertToDTO(artistaActualizado);
+            return ResponseEntity.ok(artistaActualizadoDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -54,17 +79,17 @@ public class ArtistaController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
     }
 
     @GetMapping("/artistas/{id}")
-    public ResponseEntity<Page<Artista>> buscarArtistas(
+    public ResponseEntity<Page<ArtistaDTO>> buscarArtistas(
             @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Artista> artistas = artistaService.buscarArtistasPorFiltro(filtro, pageable);
-        return ResponseEntity.ok(artistas);
+        Page<ArtistaDTO> artistasDTO = artistas.map(this::convertToDTO);
+        return ResponseEntity.ok(artistasDTO);
     }
 
 }

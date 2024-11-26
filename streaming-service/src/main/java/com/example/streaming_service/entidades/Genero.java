@@ -1,12 +1,13 @@
 package com.example.streaming_service.entidades;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Entity
@@ -24,8 +25,7 @@ public class Genero {
     @Column(name = "ANOORIGEN")
     private int anoOrigen;
 
-    @ManyToOne
-    @JoinColumn(name = "cancionId")
-    private Cancion cancion;
+    @ManyToMany(mappedBy = "generos")
+    private List<Cancion> canciones;
 
 }

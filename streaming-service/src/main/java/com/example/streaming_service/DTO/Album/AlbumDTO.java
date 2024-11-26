@@ -8,8 +8,8 @@ public class AlbumDTO {
     private String titulo;
     private int anoLanzamiento;
     private String descipcion;
-    private AlbumArtistaDTO artista;
-    private AlbumCancionDTO cancion;
+    //private AlbumArtistaDTO artista;
+    //private AlbumCancionDTO cancion;
     
     
 }
