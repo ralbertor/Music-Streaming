@@ -12,6 +12,9 @@ import com.example.streaming_service.DTO.Cancion.CancionDTO;
 import com.example.streaming_service.entidades.Cancion;
 import com.example.streaming_service.entidades.Genero;
 import com.example.streaming_service.repositorios.CancionRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -20,6 +23,12 @@ public class CancionService {
     @Autowired
     private CancionRepository cancionRepo;
 
+    @Operation(summary = "Crear una nueva canción", 
+        description = "Crea una canción con genero",
+        responses = {
+            @ApiResponse(responseCode="201", description = "Canción creada exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     public Cancion createCancionWithGeneros(CancionDTO cancionDTO) {
         //Crear la cancion
         Cancion cancion = new Cancion();
@@ -34,14 +43,24 @@ public class CancionService {
         //Guardar la canción con géneros asociados
         return cancionRepo.save(cancion);
     }
-
+    @Operation(summary = "Crear una nueva canción", 
+        description = "Crea una canción con la información proporcionada",
+        responses = {
+            @ApiResponse(responseCode="201", description = "Canción creada exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     public Cancion createCancion(Cancion cancion) {
         if (cancion.getTitulo() == null || cancion.getDuracion() == 0) {
             throw new IllegalArgumentException("Título y duración obligatoria");
         }
         return cancionRepo.save(cancion);
     }
-
+    @Operation(summary = "Actualizar una canción", 
+        description = "Actualiza una canción",
+        responses = {
+            @ApiResponse(responseCode="201", description = "Cancion creada exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     @Transactional
     public Cancion updateCancion(int id, Cancion cancion) {
         if (cancionRepo.existsById(id)) {
@@ -57,7 +76,12 @@ public class CancionService {
             return null;
         }
     }
-
+    @Operation(summary = "Elimina canción", 
+        description = "Elimina una canción con la información proporcionada",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Canción creada exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     @Transactional
     public void deleteCancion(int id) {
         if (cancionRepo.existsById(id)) {
@@ -67,7 +91,12 @@ public class CancionService {
             System.out.println("400, la canción no existe");
         }
     }
-
+    @Operation(summary = "Buscar una canción", 
+        description = "Busca una canción con el filtro dado",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Canción encontrada"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     public Page<Cancion> buscarCancionPorFiltro(String filtro, Pageable pageable) {
         return cancionRepo.buscarPorFiltro(filtro, pageable);
     }

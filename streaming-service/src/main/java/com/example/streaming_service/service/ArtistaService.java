@@ -18,6 +18,8 @@ import com.example.streaming_service.repositorios.AlbumRepository;
 import com.example.streaming_service.repositorios.ArtistaRepository;
 import com.example.streaming_service.repositorios.CancionRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -31,6 +33,13 @@ public class ArtistaService {
 
     @Autowired
     private CancionRepository cancionRepo;
+
+    @Operation(summary = "Crear un nuevo artista", 
+        description = "Crea un artista con un álbum y canciones",
+        responses = {
+            @ApiResponse(responseCode="201", description = "Artista creado exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
 
     public Artista createArtistaWithAlbumCanciones(ArtistaDTO artistaDTO, 
     List<AlbumDTO> albumDTOs, List<CancionDTO> cancionDTOs){
@@ -48,7 +57,7 @@ public class ArtistaService {
             Album album = new Album();
             album.setTitulo(albumDTO.getTitulo());
             album.setAnoLanzamiento(albumDTO.getAnoLanzamiento());
-            album.setDescripcion(albumDTO.getDescipcion());
+            album.setDescripcion(albumDTO.getDescripcion());
             album.setArtista(artista); 
         
             //Guardar el álbum
@@ -74,6 +83,12 @@ public class ArtistaService {
 
     }
 
+    @Operation(summary = "Crear un nuevo artista", 
+        description = "Crea un artista con la información proporcionada",
+        responses = {
+            @ApiResponse(responseCode="201", description = "Artista creado exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     @Transactional
     public Artista createArtista(Artista artista) {
         if (artista.getNombre() == null || artista.getNacionalidad() == null) {
@@ -87,7 +102,12 @@ public class ArtistaService {
         }
         return artistaRepo.save(artista);
     }
-
+    @Operation(summary = "Actualizar un artista", 
+        description = "Actualiza un artista",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Artista actualizado correctamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     @Transactional
     public Artista updateArtista(int id, Artista artista) {
         if (artistaRepo.existsById(id)) {
@@ -107,7 +127,12 @@ public class ArtistaService {
             return null;
         }
     }
-
+    @Operation(summary = "Elimina un artista", 
+        description = "Elimina un artista con la información proporcionada",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Artista eliminado exitosamente"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     @Transactional
     public void deleteArtista(int id) {
         if (artistaRepo.existsById(id)) {
@@ -117,7 +142,12 @@ public class ArtistaService {
             System.out.println("404, el artista no existe");
         }
     }
-
+    @Operation(summary = "Buscar un artista", 
+        description = "Busca un artista con el filtro dado",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Artista encontrado"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
     public Page<Artista> buscarArtistasPorFiltro(String filtro, Pageable pageable) {
         return artistaRepo.buscarPorFiltro(filtro, pageable);
     }

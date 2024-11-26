@@ -3,25 +3,25 @@ package com.example.streaming_service.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Album.AlbumDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.service.AlbumService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.example.streaming_service.DTO.Album.AlbumDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/albumes")
@@ -40,7 +40,8 @@ public class AlbumController {
     private Album convertToEntity(AlbumDTO albumDTO){
         return modelMapper.map(albumDTO, Album.class);
     }
-
+    @Operation(summary="Crear un nuevo album", 
+    description="Permite crear un álbum con los detalles proporcionados.")
     @PostMapping("/albumes/add")
     public ResponseEntity<AlbumDTO> crearAlbum(@RequestBody AlbumDTO albumDTO) {
         try {
@@ -53,7 +54,8 @@ public class AlbumController {
         }
 
     }
-
+    @Operation(summary="Actualizar un álbum", 
+    description="Permite actualizar un álbum con los detalles proporcionados.")
     @PutMapping("/albumes/update/{id}")
     public ResponseEntity<AlbumDTO> actualizarAlbum(@PathVariable int id, @RequestBody AlbumDTO albumDTO) {
         Album album = convertToEntity(albumDTO);
@@ -66,7 +68,8 @@ public class AlbumController {
         }
 
     }
-
+    @Operation(summary="Eliminar un álbum", 
+    description="Permite eliminar un álbum.")
     @DeleteMapping("/albumes/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
         try {
@@ -77,7 +80,8 @@ public class AlbumController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
+    @Operation(summary="Buscar album", 
+    description="Permite buscar un álbum con el filtro proporcionados.")
     @GetMapping("/albumes/{id}")
     public ResponseEntity<Page<AlbumDTO>> buscarAlbum(
             @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,

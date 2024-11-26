@@ -22,6 +22,8 @@ import com.example.streaming_service.DTO.Artista.ArtistaDTO;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.service.ArtistaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/artistas")
 public class ArtistaController {
@@ -38,7 +40,8 @@ public class ArtistaController {
     private Artista convertToEntity(ArtistaDTO artistaDTO) {
         return modelMapper.map(artistaDTO, Artista.class);
     }
-
+    @Operation(summary="Crear un nuevo artista", 
+    description="Permite crear un artista con los detalles proporcionados.")
     @PostMapping("/artistas/add")
     public ResponseEntity<ArtistaDTO> crearArtista(@RequestBody ArtistaDTO artistaDTO) {
         try {
@@ -50,6 +53,8 @@ public class ArtistaController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @Operation(summary="Crear un nuevo artista con su álbum y sus canciones", 
+    description="Permite crear un artista con los detalles proporcionados.")
     @PostMapping("/artistas/crearConAlbumYCanciones")
     public ResponseEntity<Artista> crearArtistaConAlbumYCanciones(
         @RequestBody ArtistaAlbumCancionDTO artistaDTO) {
@@ -57,7 +62,8 @@ public class ArtistaController {
         
         return new ResponseEntity<>(artista, HttpStatus.CREATED);
     }
-    
+    @Operation(summary="Actualizar un artista", 
+    description="Permite actualizar un artista.")
     @PutMapping("/artistas/update/{id}")
     public ResponseEntity<ArtistaDTO> actualizarArtista(@PathVariable int id, @RequestBody ArtistaDTO artistaDTO) {
 
@@ -70,7 +76,8 @@ public class ArtistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
+    @Operation(summary="Eliminar un artista", 
+    description="Permite eliminar un artista.")
     @DeleteMapping("/artistas/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
         try {
@@ -80,7 +87,8 @@ public class ArtistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
+    @Operation(summary="Buscar un artista", 
+    description="Permite buscar un artista con el filtro proporcionado.")
     @GetMapping("/artistas/{id}")
     public ResponseEntity<Page<ArtistaDTO>> buscarArtistas(
             @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
