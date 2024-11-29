@@ -1,5 +1,7 @@
 package com.example.streaming_service.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +44,7 @@ public class ArtistaController {
     }
     @Operation(summary="Crear un nuevo artista", 
     description="Permite crear un artista con los detalles proporcionados.")
-    @PostMapping("/artistas/add")
+    @PostMapping("/add")
     public ResponseEntity<ArtistaDTO> crearArtista(@RequestBody ArtistaDTO artistaDTO) {
         try {
             Artista artista = convertToEntity(artistaDTO);
@@ -55,16 +57,20 @@ public class ArtistaController {
     }
     @Operation(summary="Crear un nuevo artista con su álbum y sus canciones", 
     description="Permite crear un artista con los detalles proporcionados.")
-    @PostMapping("/artistas/crearConAlbumYCanciones")
+    @PostMapping("/crearConAlbumYCanciones")
     public ResponseEntity<Artista> crearArtistaConAlbumYCanciones(
         @RequestBody ArtistaAlbumCancionDTO artistaDTO) {
-        Artista artista = artistaService.createArtistaWithAlbumCanciones(artistaDTO.getArtista(), artistaDTO.getAlbumes(), artistaDTO.getCanciones());
+            if(artistaDTO == null){
+                throw new IllegalArgumentException("ArtistaDTO no puede ser nulo");
+            }
+        Artista artista = artistaService.createArtistaWithAlbumCanciones(
+            artistaDTO.getArtista(), artistaDTO.getAlbumes(), artistaDTO.getCanciones());
         
         return new ResponseEntity<>(artista, HttpStatus.CREATED);
     }
     @Operation(summary="Actualizar un artista", 
     description="Permite actualizar un artista.")
-    @PutMapping("/artistas/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ArtistaDTO> actualizarArtista(@PathVariable int id, @RequestBody ArtistaDTO artistaDTO) {
 
         Artista artista = convertToEntity(artistaDTO);
@@ -78,7 +84,7 @@ public class ArtistaController {
     }
     @Operation(summary="Eliminar un artista", 
     description="Permite eliminar un artista.")
-    @DeleteMapping("/artistas/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
         try {
             artistaService.deleteArtista(id);
@@ -99,5 +105,11 @@ public class ArtistaController {
         Page<ArtistaDTO> artistasDTO = artistas.map(this::convertToDTO);
         return ResponseEntity.ok(artistasDTO);
     }
-
+    @Operation(summary="Listar Artistas",
+    description="Permite listar todos los artistas")
+    @GetMapping("/todos")
+    public List<Artista> listarArtistas() {
+        return artistaService.listarArtistas();
+    }
+       
 }

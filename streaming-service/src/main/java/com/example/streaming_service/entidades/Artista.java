@@ -1,5 +1,6 @@
 package com.example.streaming_service.entidades;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,6 @@ public class Artista {
         joinColumns = @JoinColumn(name = "artista_id"),
         inverseJoinColumns = @JoinColumn(name = "cancion_id")
     )
-    private List<Cancion> canciones;
+    private List<Cancion> canciones = new ArrayList<>();
 
 }

@@ -1,5 +1,7 @@
 package com.example.streaming_service.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +44,7 @@ public class AlbumController {
     }
     @Operation(summary="Crear un nuevo album", 
     description="Permite crear un álbum con los detalles proporcionados.")
-    @PostMapping("/albumes/add")
+    @PostMapping("/add")
     public ResponseEntity<AlbumDTO> crearAlbum(@RequestBody AlbumDTO albumDTO) {
         try {
             Album album = convertToEntity(albumDTO);
@@ -56,7 +58,7 @@ public class AlbumController {
     }
     @Operation(summary="Actualizar un álbum", 
     description="Permite actualizar un álbum con los detalles proporcionados.")
-    @PutMapping("/albumes/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<AlbumDTO> actualizarAlbum(@PathVariable int id, @RequestBody AlbumDTO albumDTO) {
         Album album = convertToEntity(albumDTO);
         Album albumActualizado = albumService.updateAlbum(id, album);
@@ -70,7 +72,7 @@ public class AlbumController {
     }
     @Operation(summary="Eliminar un álbum", 
     description="Permite eliminar un álbum.")
-    @DeleteMapping("/albumes/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> eliminarArtista(@PathVariable int id) {
         try {
             albumService.deleteAlbum(id);
@@ -82,7 +84,7 @@ public class AlbumController {
     }
     @Operation(summary="Buscar album", 
     description="Permite buscar un álbum con el filtro proporcionados.")
-    @GetMapping("/albumes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Page<AlbumDTO>> buscarAlbum(
             @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -92,5 +94,13 @@ public class AlbumController {
         Page<AlbumDTO> albumesDTO = albumes.map(this::convertToDTO);
         return ResponseEntity.ok(albumesDTO);
     }
+
+    @Operation(summary= "Listar Albumes",
+    description="Permite listar todos los albumes")
+    @GetMapping("/todos")
+    public List<Album> listarAlbumes() {
+        return albumService.listarAlbumes();
+    }
+    
 
 }

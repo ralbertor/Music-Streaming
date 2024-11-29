@@ -1,8 +1,10 @@
 package com.example.streaming_service.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.streaming_service.entidades.Genero;
@@ -70,11 +72,20 @@ public class GeneroService {
     @Operation(summary = "Buscar un genero", 
             description = "Busca un genero con el filtro dado",
             responses = {
-                @ApiResponse(responseCode="200", description = "Cancion creada exitosamente"),
+                @ApiResponse(responseCode="200", description = "Género creado exitosamente"),
                 @ApiResponse(responseCode= "400", description= "Datos inválidos")
             })
     public Page<Genero> buscarGenerosPorFiltro(String filtro, Pageable pageable) {
         return generoRepo.buscarPorFiltro(filtro, pageable);
+    }
+    @Operation(summary = "Lista los géneros",
+        description="Lista todos los géneros",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Generos listados correctamente"),
+                @ApiResponse(responseCode="400", description= "Datos inválidos")
+        })
+    public List<Genero> listarGeneros(){
+        return generoRepo.findAll();
     }
 
 }

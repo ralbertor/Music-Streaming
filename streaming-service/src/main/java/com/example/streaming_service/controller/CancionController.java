@@ -1,5 +1,7 @@
 package com.example.streaming_service.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Cancion.CancionDTO;
+import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 import com.example.streaming_service.entidades.Cancion;
 import com.example.streaming_service.service.CancionService;
 
@@ -44,18 +47,18 @@ public class CancionController {
     @Operation(summary="Crear una nueva canción con su genero", 
     description="Permite crear una canción con el genero.")
     @PostMapping("/crearConGeneros")
-    public ResponseEntity<Cancion> crearCancionConGenero(@RequestBody CancionDTO cancionDTO) {
+    public ResponseEntity<Cancion> crearCancionConGenero(@RequestBody CancionGeneroDTO cancionDTO) {
         Cancion cancion = cancionService.createCancionWithGeneros(cancionDTO);
         return new ResponseEntity<>(cancion, HttpStatus.CREATED);
     }
     
     @Operation(summary="Crear una nueva canción", 
     description="Permite crear una canción con los detalles proporcionados.")
-    @PostMapping("/canciones/add")
+    @PostMapping("/add")
     public ResponseEntity<CancionDTO> crearCancion(@RequestBody CancionDTO cancionDTO) {
         try {
-            Cancion cancion = convertToEntity(cancionDTO);
-            Cancion nuevaCancion = cancionService.createCancion(cancion);
+            //Cancion cancion = convertToEntity(cancionDTO);
+            Cancion nuevaCancion = cancionService.createCancion(cancionDTO);
             CancionDTO nuevaCancionDTO = convertToDTO(nuevaCancion);
             return new ResponseEntity<>(nuevaCancionDTO, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -64,7 +67,7 @@ public class CancionController {
     }
     @Operation(summary="Actualizar una canción", 
     description="Permite actualizar una canción.")
-    @PutMapping("/canciones/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CancionDTO> actualizarCancion(@PathVariable int id, @RequestBody CancionDTO cancionDTO) {
         Cancion cancion = convertToEntity(cancionDTO);
         Cancion cancionActualizada = cancionService.updateCancion(id, cancion);
@@ -77,7 +80,7 @@ public class CancionController {
     }
     @Operation(summary="Eliminar una canción", 
     description="Permite crear una canción")
-    @DeleteMapping("/canciones/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> eliminarCancion(@PathVariable int id) {
         try {
             cancionService.deleteCancion(id);
@@ -89,7 +92,7 @@ public class CancionController {
     }
     @Operation(summary="Buscar una canción", 
     description="Permite buscar una canción con el filtro proporcionados.")
-    @GetMapping("/canciones/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Page<CancionDTO>> buscarCancion(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -98,5 +101,10 @@ public class CancionController {
         Page<CancionDTO> cancionesDTO = canciones.map(this::convertToDTO);
         return ResponseEntity.ok(cancionesDTO);
     }
-
+    @Operation(summary="Listar canciones",
+    description="Permite listar todas las canciones")
+    @GetMapping("/todos")
+    public List<Cancion> listarCanciones() {
+        return cancionService.listarCanciones();
+    }
 }

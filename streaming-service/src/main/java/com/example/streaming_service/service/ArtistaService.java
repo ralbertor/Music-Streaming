@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.streaming_service.DTO.Album.AlbumDTO;
 import com.example.streaming_service.DTO.Artista.ArtistaDTO;
-import com.example.streaming_service.DTO.Cancion.CancionDTO;
+import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.entidades.Cancion;
@@ -42,7 +42,7 @@ public class ArtistaService {
         })
 
     public Artista createArtistaWithAlbumCanciones(ArtistaDTO artistaDTO, 
-    List<AlbumDTO> albumDTOs, List<CancionDTO> cancionDTOs){
+    List<AlbumDTO> albumDTOs, List<CancionGeneroDTO> cancionDTOs){
         //Crear aritista
         Artista artista = new Artista();
         artista.setNombre(artistaDTO.getNombre());
@@ -65,7 +65,7 @@ public class ArtistaService {
 
             //Agregar canciones al album
             List<Cancion> canciones = new ArrayList<>();
-            for (CancionDTO cancionDTO : cancionDTOs) {
+            for (CancionGeneroDTO cancionDTO : cancionDTOs) {
                 Cancion cancion = new Cancion();
                 cancion.setTitulo(cancionDTO.getTitulo());
                 cancion.setDuracion(cancionDTO.getDuracion());
@@ -151,5 +151,13 @@ public class ArtistaService {
     public Page<Artista> buscarArtistasPorFiltro(String filtro, Pageable pageable) {
         return artistaRepo.buscarPorFiltro(filtro, pageable);
     }
-
+    @Operation(summary="Listar artistas",
+        description = "Lista todos los artistas",
+        responses={
+            @ApiResponse(responseCode="200", description = "Todos los artistas listados"),
+            @ApiResponse(responseCode="400", description="Datos inválidos")
+        })
+    public List<Artista> listarArtistas(){
+        return artistaRepo.findAll();
+    }
 }

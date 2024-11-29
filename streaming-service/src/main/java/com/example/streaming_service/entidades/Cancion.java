@@ -50,5 +50,15 @@ public class Cancion {
     )
     @Schema(description="Generos de la canción")
     private List<Genero> generos;
+
+
+    public Cancion(){}
+
+    public Cancion( String titulo, int duracion) {
+        this.titulo = titulo;
+        this.duracion = duracion;
+       
+    }
+    
    
 }

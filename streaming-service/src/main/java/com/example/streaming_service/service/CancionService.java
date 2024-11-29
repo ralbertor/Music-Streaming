@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.streaming_service.DTO.Cancion.CancionDTO;
+import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 import com.example.streaming_service.entidades.Cancion;
 import com.example.streaming_service.entidades.Genero;
 import com.example.streaming_service.repositorios.CancionRepository;
@@ -29,7 +30,7 @@ public class CancionService {
             @ApiResponse(responseCode="201", description = "Canción creada exitosamente"),
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
-    public Cancion createCancionWithGeneros(CancionDTO cancionDTO) {
+    public Cancion createCancionWithGeneros(CancionGeneroDTO cancionDTO) {
         //Crear la cancion
         Cancion cancion = new Cancion();
         cancion.setTitulo(cancionDTO.getTitulo());
@@ -49,12 +50,17 @@ public class CancionService {
             @ApiResponse(responseCode="201", description = "Canción creada exitosamente"),
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
-    public Cancion createCancion(Cancion cancion) {
-        if (cancion.getTitulo() == null || cancion.getDuracion() == 0) {
-            throw new IllegalArgumentException("Título y duración obligatoria");
-        }
-        return cancionRepo.save(cancion);
+    public Cancion createCancion(CancionDTO cancionDTO) {
+       Cancion cancion = new Cancion();
+       cancion.setTitulo(cancionDTO.getTitulo());
+       cancion.setDuracion(cancionDTO.getDuracion());
+       cancion.setUrlCancion(cancionDTO.getUrlCancion());
+
+       cancion.setGeneros(new ArrayList<>());
+
+       return cancionRepo.save(cancion);
     }
+
     @Operation(summary = "Actualizar una canción", 
         description = "Actualiza una canción",
         responses = {
@@ -70,7 +76,7 @@ public class CancionService {
             nuevaCancion.setDuracion(cancion.getDuracion());
             nuevaCancion.setUrlCancion(cancion.getUrlCancion());
             nuevaCancion.setAlbum(cancion.getAlbum());
-            createCancion(nuevaCancion);
+            cancionRepo.save(nuevaCancion);
             return nuevaCancion;
         } else {
             return null;
@@ -100,5 +106,13 @@ public class CancionService {
     public Page<Cancion> buscarCancionPorFiltro(String filtro, Pageable pageable) {
         return cancionRepo.buscarPorFiltro(filtro, pageable);
     }
-
+    @Operation(summary = "Lista las canciones",
+        description="Lista todas las cancioes",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Canciones listadas correctamente"),
+                @ApiResponse(responseCode="400", description= "Datos inválidos")
+        })
+    public List<Cancion> listarCanciones(){
+        return cancionRepo.findAll();
+    }
 }

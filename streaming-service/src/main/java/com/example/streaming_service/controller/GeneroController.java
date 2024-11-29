@@ -1,5 +1,7 @@
 package com.example.streaming_service.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,7 +46,7 @@ public class GeneroController {
 
     @Operation(summary="Crear un nuevo género", 
     description="Permite crear un género con los detalles proporcionados.")
-    @PostMapping("/generos/add")
+    @PostMapping("/add")
     public ResponseEntity<GeneroDTO> crearGenero(@RequestBody GeneroDTO generoDTO) {
         try {
             Genero genero = convertToEntity(generoDTO);
@@ -57,7 +59,7 @@ public class GeneroController {
     }
     @Operation(summary="Actualiza un género", 
     description="Permite actualizar un género.")
-    @PutMapping("/generos/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<GeneroDTO> actualizarGenero(@PathVariable int id, @RequestBody GeneroDTO generoDTO) {
         Genero genero = convertToEntity(generoDTO);
         Genero generoActualizado = generoService.updateGenero(id, genero);
@@ -70,7 +72,7 @@ public class GeneroController {
     }
     @Operation(summary="Eliminar un género", 
     description="Permite eliminar un género.")
-    @DeleteMapping("/generos/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> eliminarGenero(@PathVariable int id) {
         try {
             generoService.deleteGenero(id);
@@ -82,7 +84,7 @@ public class GeneroController {
     }
     @Operation(summary="Buscar un género", 
     description="Permite buscar un género con los filtros proporcionados.")
-    @GetMapping("/generos/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Page<GeneroDTO>> buscarGenero(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -92,4 +94,11 @@ public class GeneroController {
         return ResponseEntity.ok(generosDTO);
     }
 
+    @Operation(summary="Listar generos",
+    description="Permite listar todos los géneros")
+    @GetMapping("/todos")
+    public List<Genero> listargeneros() {
+        return generoService.listarGeneros();
+    }
+    
 }

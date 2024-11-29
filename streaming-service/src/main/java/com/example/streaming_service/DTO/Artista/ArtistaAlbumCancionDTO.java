@@ -3,7 +3,7 @@ package com.example.streaming_service.DTO.Artista;
 import java.util.List;
 
 import com.example.streaming_service.DTO.Album.AlbumDTO;
-import com.example.streaming_service.DTO.Cancion.CancionDTO;
+import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -16,6 +16,6 @@ public class ArtistaAlbumCancionDTO {
     @Schema(description = "Álbum que se va a crear del artista")
     private List<AlbumDTO> albumes;
     @Schema(description="Canciones que se van a crear del artista")
-    private List<CancionDTO> canciones;
+    private List<CancionGeneroDTO> canciones;
     
 }

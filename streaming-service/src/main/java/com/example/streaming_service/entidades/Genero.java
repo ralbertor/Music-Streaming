@@ -2,6 +2,8 @@ package com.example.streaming_service.entidades;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +33,7 @@ public class Genero {
     @Schema(description="Año de origen del género")
     private int anoOrigen;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "generos")
     @Schema(description="Canciones a los que pertenecen el género")
     private List<Cancion> canciones;

@@ -1,5 +1,7 @@
 package com.example.streaming_service.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +84,15 @@ public class AlbumService {
         })
     public Page<Album> buscarAlbumesPorFiltro(String filtro, Pageable pageable) {
         return albumRepo.buscarPorFiltro(filtro, pageable);
+    }
+    @Operation(summary= "Listar un álbum",
+        description="Listar todos los albumes",
+        responses={
+            @ApiResponse(responseCode = "200", description="Todos los albumes listados"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+        })
+    public List<Album> listarAlbumes(){
+        return albumRepo.findAll();
     }
 
 }
