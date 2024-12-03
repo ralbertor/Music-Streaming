@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Album.AlbumCancionDTO;
 import com.example.streaming_service.DTO.Album.AlbumDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.service.AlbumService;
@@ -55,6 +56,19 @@ public class AlbumController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+    @Operation(summary="Crear un nuevo album con sus canciones", 
+    description="Permite crear un album con los detalles proporcionados.")
+    @PostMapping("/crearConCanciones")
+    public ResponseEntity<Album> crearArtistaConAlbumYCanciones(
+        @RequestBody AlbumCancionDTO albumDTO) {
+            if(albumDTO == null){
+                throw new IllegalArgumentException("AlbumDTO no puede ser nulo");
+            }
+        Album album = albumService.createAlbumWithCanciones(
+            albumDTO.getAlbum(), albumDTO.getCanciones());
+        
+        return new ResponseEntity<>(album, HttpStatus.CREATED);
     }
     @Operation(summary="Actualizar un álbum", 
     description="Permite actualizar un álbum con los detalles proporcionados.")
