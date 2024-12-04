@@ -62,24 +62,22 @@ La documentación de la API está disponible a través de Swagger en la siguient
 
 ## Endpoint Principales
 * Artistas:
-
-  *`GET /api/artistas/todos`
   
-  *`POST /api/artistas`
+  * `GET /api/artistas/todos`
+  * `POST /api/artistas`
 
-*Álbumes:
+* Álbumes:
+  
+   * `GET /api/albumes/todos`
+   * `POST /api/albumes`
 
-  *`GET /api/albumes/todos`
+* Canciones:
+  
+   * `GET /api/canciones/todos`
+   * `POST /api/canciones`
 
-  *`POST /api/albumes`
-
-*Canciones:
-
-  *`GET /api/canciones/todos`
-  *`POST /api/canciones`
-
-*Géneros:
-
+* Géneros:
+  
   * `GET /api/generos/todos`
   * `POST /api/generos`
 ## Roles y Permisos
