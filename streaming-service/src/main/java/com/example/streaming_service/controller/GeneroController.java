@@ -62,7 +62,7 @@ public class GeneroController {
     @PutMapping("/update/{id}")
     public ResponseEntity<GeneroDTO> actualizarGenero(@PathVariable int id, @RequestBody GeneroDTO generoDTO) {
         Genero genero = convertToEntity(generoDTO);
-        Genero generoActualizado = generoService.updateGenero(id, genero);
+        Genero generoActualizado = generoService.actualizarGenero(id, genero);
         if (generoActualizado != null) {
             GeneroDTO generoActualizadoDTO = convertToDTO(generoActualizado);
             return ResponseEntity.ok(generoActualizadoDTO);

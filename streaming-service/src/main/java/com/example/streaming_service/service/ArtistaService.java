@@ -109,24 +109,24 @@ public class ArtistaService {
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
     @Transactional
-    public Artista updateArtista(int id, Artista artista) {
-        if (artistaRepo.existsById(id)) {
-            Artista nuevoArtista = new Artista();
-            nuevoArtista.setId(artista.getId());
-            nuevoArtista.setNombre(artista.getNombre());
-            nuevoArtista.setFechaNacimiento(artista.getFechaNacimiento());
-            nuevoArtista.setNacionalidad(artista.getNacionalidad());
-            if (nuevoArtista.getAlbumes() != null) {
-                nuevoArtista.getAlbumes().clear();
-                nuevoArtista.getAlbumes().addAll(artista.getAlbumes());
-                artista.getAlbumes().forEach(album -> album.setArtista(nuevoArtista));
+    public Artista updateArtista(int id, Artista artistaActualizado) {
+        return artistaRepo.findById(id).map(artistaExistente -> {
+            // Actualizamos los campos del artista existente con los valores proporcionados
+            artistaExistente.setNombre(artistaActualizado.getNombre());
+            artistaExistente.setFechaNacimiento(artistaActualizado.getFechaNacimiento());
+            artistaExistente.setNacionalidad(artistaActualizado.getNacionalidad());
+    
+            // Actualizamos las relaciones con los álbumes si se proporcionaron
+            if (artistaActualizado.getAlbumes() != null) {
+                artistaExistente.getAlbumes().clear();  // Limpiamos los álbumes actuales
+                artistaExistente.getAlbumes().addAll(artistaActualizado.getAlbumes());  // Añadimos los nuevos álbumes
+                artistaActualizado.getAlbumes().forEach(album -> album.setArtista(artistaExistente));  // Ajustamos la relación inversa
             }
-            createArtista(nuevoArtista);
-            return nuevoArtista;
-        } else {
-            return null;
-        }
+    
+            return artistaRepo.save(artistaExistente);  // Guardamos el artista actualizado
+        }).orElseThrow(() -> new RuntimeException("Artista con ID " + id + " no encontrado"));
     }
+    
     @Operation(summary = "Elimina un artista", 
         description = "Elimina un artista con la información proporcionada",
         responses = {

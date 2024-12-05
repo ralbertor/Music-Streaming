@@ -68,20 +68,15 @@ public class CancionService {
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
     @Transactional
-    public Cancion updateCancion(int id, Cancion cancion) {
-        if (cancionRepo.existsById(id)) {
-            Cancion nuevaCancion = new Cancion();
-            nuevaCancion.setId(cancion.getId());
-            nuevaCancion.setTitulo(cancion.getTitulo());
-            nuevaCancion.setDuracion(cancion.getDuracion());
-            nuevaCancion.setUrlCancion(cancion.getUrlCancion());
-            nuevaCancion.setAlbum(cancion.getAlbum());
-            cancionRepo.save(nuevaCancion);
-            return nuevaCancion;
-        } else {
-            return null;
-        }
-    }
+    public Cancion updateCancion(int id, Cancion cancionActualizada) {
+        return cancionRepo.findById(id).map(cancion -> {
+            cancion.setTitulo(cancionActualizada.getTitulo());
+            cancion.setDuracion(cancionActualizada.getDuracion());
+            cancion.setUrlCancion(cancionActualizada.getUrlCancion());
+            cancion.setAlbum(cancionActualizada.getAlbum());
+            return cancionRepo.save(cancion);
+        }).orElseThrow(() -> new RuntimeException("Cancion con ID" + id + " no encontrado"));
+        } 
     @Operation(summary = "Elimina canción", 
         description = "Elimina una canción con la información proporcionada",
         responses = {

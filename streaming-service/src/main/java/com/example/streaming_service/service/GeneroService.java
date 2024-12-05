@@ -40,20 +40,15 @@ public class GeneroService {
                 @ApiResponse(responseCode= "400", description= "Datos inválidos")
             })
     @Transactional
-    public Genero updateGenero(int id, Genero genero) {
-        if (generoRepo.existsById(id)) {
-            Genero nuevoGenero = new Genero();
-            nuevoGenero.setId(genero.getId());
-            nuevoGenero.setNombre(genero.getNombre());
-            nuevoGenero.setDescripcion(genero.getDescripcion());
-            nuevoGenero.setAnoOrigen(genero.getAnoOrigen());
-            createGenero(nuevoGenero);
-            return nuevoGenero;
-
-        } else {
-            return null;
-        }
+    public Genero actualizarGenero(int id, Genero generoActualizado) {
+        return generoRepo.findById(id).map(genero -> {
+            genero.setNombre(generoActualizado.getNombre());
+            genero.setDescripcion(generoActualizado.getDescripcion());
+            genero.setAnoOrigen(generoActualizado.getAnoOrigen());
+            return generoRepo.save(genero);
+        }).orElseThrow(() -> new RuntimeException("Género con ID " + id + " no encontrado"));
     }
+
     @Operation(summary = "Elimina un genero", 
             description = "Elimina un genero",
             responses = {
