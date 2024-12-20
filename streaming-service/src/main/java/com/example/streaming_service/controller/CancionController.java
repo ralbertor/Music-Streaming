@@ -1,6 +1,7 @@
 package com.example.streaming_service.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +105,11 @@ public class CancionController {
     @Operation(summary="Listar canciones",
     description="Permite listar todas las canciones")
     @GetMapping("/todos")
-    public List<Cancion> listarCanciones() {
-        return cancionService.listarCanciones();
+    public ResponseEntity<List<CancionDTO>> listarCanciones() {
+        List<Cancion> canciones = cancionService.listarCanciones();
+        List<CancionDTO> cancionDTO = canciones.stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+        return ResponseEntity.ok().body(cancionDTO);
     }
 }

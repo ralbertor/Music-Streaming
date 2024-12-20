@@ -1,6 +1,7 @@
 package com.example.streaming_service.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +98,12 @@ public class GeneroController {
     @Operation(summary="Listar generos",
     description="Permite listar todos los géneros")
     @GetMapping("/todos")
-    public List<Genero> listargeneros() {
-        return generoService.listarGeneros();
+    public ResponseEntity<List<GeneroDTO>> listargeneros() {
+        List<Genero> generos =  generoService.listarGeneros();
+        List<GeneroDTO> generoDTO = generos.stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+        return ResponseEntity.ok().body(generoDTO);
     }
     
 }

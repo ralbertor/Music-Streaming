@@ -1,3 +1,4 @@
+/** 
 package com.example.streaming_service.service;
 
 
@@ -30,4 +31,4 @@ public class UsuarioDetailsService implements UserDetailsService {
                         .toList());
     }
 }
-
+*/

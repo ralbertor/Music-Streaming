@@ -1,4 +1,4 @@
-package com.example.streaming_service.Security;
+/**package com.example.streaming_service.Security;
 
 import java.io.IOException;
 
@@ -19,3 +19,4 @@ public class redireccion implements AuthenticationSuccessHandler{
         response.sendRedirect("/swagger-ui/index.html");
     }
 }
+**/
