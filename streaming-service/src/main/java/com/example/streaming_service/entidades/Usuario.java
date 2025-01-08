@@ -39,5 +39,37 @@ public class Usuario {
         inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
     private List<Rol> roles;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Rol> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
+    }
     
 }

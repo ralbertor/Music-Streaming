@@ -53,4 +53,52 @@ public class Artista {
     )
     private List<Cancion> canciones = new ArrayList<>();
 
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Date getFechaNacimiento() {
+        return this.fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getNacionalidad() {
+        return this.nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+
+    public List<Album> getAlbumes() {
+        return this.albumes;
+    }
+
+    public void setAlbumes(List<Album> albumes) {
+        this.albumes = albumes;
+    }
+
+    public List<Cancion> getCanciones() {
+        return this.canciones;
+    }
+
+    public void setCanciones(List<Cancion> canciones) {
+        this.canciones = canciones;
+    }
 }

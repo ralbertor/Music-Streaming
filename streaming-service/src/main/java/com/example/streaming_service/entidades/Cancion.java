@@ -59,6 +59,62 @@ public class Cancion {
         this.duracion = duracion;
        
     }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return this.titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getDuracion() {
+        return this.duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    public String getUrlCancion() {
+        return this.urlCancion;
+    }
+
+    public void setUrlCancion(String urlCancion) {
+        this.urlCancion = urlCancion;
+    }
+
+    public List<Artista> getArtistas() {
+        return this.artistas;
+    }
+
+    public void setArtistas(List<Artista> artistas) {
+        this.artistas = artistas;
+    }
+
+    public Album getAlbum() {
+        return this.album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public List<Genero> getGeneros() {
+        return this.generos;
+    }
+
+    public void setGeneros(List<Genero> generos) {
+        this.generos = generos;
+    }
     
    
 }

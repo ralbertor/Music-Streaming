@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Schema(description="DTO para crear o actualizar un álbum")
 public class AlbumDTO {
+    @Schema(description= "id del album", example = "2")
+    private int id;
     @Schema(description= "Título del álbum", example = "Canciones Perdidas")
     private String titulo;
     @Schema(description="Año Lanzamiento del álbum", example="1498")

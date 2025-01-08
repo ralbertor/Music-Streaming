@@ -38,4 +38,44 @@ public class Genero {
     @Schema(description="Canciones a los que pertenecen el género")
     private List<Cancion> canciones;
 
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return this.descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getAnoOrigen() {
+        return this.anoOrigen;
+    }
+
+    public void setAnoOrigen(int anoOrigen) {
+        this.anoOrigen = anoOrigen;
+    }
+
+    public List<Cancion> getCanciones() {
+        return this.canciones;
+    }
+
+    public void setCanciones(List<Cancion> canciones) {
+        this.canciones = canciones;
+    }
 }

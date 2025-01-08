@@ -52,4 +52,68 @@ public class Album {
     @Schema(description= "Canciones del álbum")
     private List<Cancion> canciones;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getAnoLanzamiento() {
+        return anoLanzamiento;
+    }
+
+    public void setAnoLanzamiento(int anoLanzamiento) {
+        this.anoLanzamiento = anoLanzamiento;
+    }
+
+    public int getNumeroCanciones() {
+        return numeroCanciones;
+    }
+
+    public void setNumeroCanciones(int numeroCanciones) {
+        this.numeroCanciones = numeroCanciones;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getUrlPortada() {
+        return this.urlPortada;
+    }
+
+    public void setUrlPortada(String urlPortada) {
+        this.urlPortada = urlPortada;
+    }
+
+    public Artista getArtista() {
+        return this.artista;
+    }
+
+    public void setArtista(Artista artista) {
+        this.artista = artista;
+    }
+
+    public List<Cancion> getCanciones() {
+        return this.canciones;
+    }
+
+    public void setCanciones(List<Cancion> canciones) {
+        this.canciones = canciones;
+    }
+
 }
