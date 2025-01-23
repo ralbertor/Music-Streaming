@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Cancion.CancionCreateDTO;
 import com.example.streaming_service.DTO.Cancion.CancionDTO;
 import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 import com.example.streaming_service.entidades.Cancion;
@@ -56,12 +57,10 @@ public class CancionController {
     @Operation(summary="Crear una nueva canción", 
     description="Permite crear una canción con los detalles proporcionados.")
     @PostMapping("/add")
-    public ResponseEntity<CancionDTO> crearCancion(@RequestBody CancionDTO cancionDTO) {
+    public ResponseEntity<Cancion> crearCancion(@RequestBody CancionCreateDTO cancionDTO) {
         try {
-            //Cancion cancion = convertToEntity(cancionDTO);
             Cancion nuevaCancion = cancionService.createCancion(cancionDTO);
-            CancionDTO nuevaCancionDTO = convertToDTO(nuevaCancion);
-            return new ResponseEntity<>(nuevaCancionDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(nuevaCancion, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

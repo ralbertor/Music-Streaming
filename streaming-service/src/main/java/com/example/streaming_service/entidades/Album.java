@@ -2,6 +2,9 @@ package com.example.streaming_service.entidades;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,6 +49,8 @@ public class Album {
     @ManyToOne
     @JoinColumn(name = "artistaId")
     @Schema(description="Artista del álbum")
+    @JsonBackReference //Relación inversa
+    @JsonIgnore
     private Artista artista;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)

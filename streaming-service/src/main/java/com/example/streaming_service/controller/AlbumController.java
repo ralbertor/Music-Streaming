@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Album.AlbumCancionDTO;
+import com.example.streaming_service.DTO.Album.AlbumCreateDTO;
 import com.example.streaming_service.DTO.Album.AlbumDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.service.AlbumService;
@@ -47,12 +48,16 @@ public class AlbumController {
     @Operation(summary="Crear un nuevo album", 
     description="Permite crear un álbum con los detalles proporcionados.")
     @PostMapping("/add")
-    public ResponseEntity<AlbumDTO> crearAlbum(@RequestBody AlbumDTO albumDTO) {
+    public ResponseEntity<Album> crearAlbum(@RequestBody AlbumCreateDTO albumDTO) {
         try {
-            Album album = convertToEntity(albumDTO);
+            Album album = new Album();
+            album.setTitulo(albumDTO.getTitulo());
+            album.setAnoLanzamiento(albumDTO.getAnoLanzamiento());
+            album.setDescripcion(albumDTO.getDescripcion());
+            album.setNumeroCanciones(albumDTO.getNumeroCanciones());
+            album.setUrlPortada(albumDTO.getUrlPortada());
             Album nuevoAlbum = albumService.createAlbum(album);
-            AlbumDTO nuevoAlbumDTO = convertToDTO(nuevoAlbum);
-            return new ResponseEntity<>(nuevoAlbumDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(nuevoAlbum, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

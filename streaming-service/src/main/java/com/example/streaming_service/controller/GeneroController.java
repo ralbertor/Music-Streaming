@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Genero.GeneroCreateDTO;
 import com.example.streaming_service.DTO.Genero.GeneroDTO;
 import com.example.streaming_service.entidades.Genero;
 import com.example.streaming_service.service.GeneroService;
@@ -48,12 +49,13 @@ public class GeneroController {
     @Operation(summary="Crear un nuevo género", 
     description="Permite crear un género con los detalles proporcionados.")
     @PostMapping("/add")
-    public ResponseEntity<GeneroDTO> crearGenero(@RequestBody GeneroDTO generoDTO) {
+    public ResponseEntity<Genero> crearGenero(@RequestBody GeneroCreateDTO generoDTO) {
         try {
-            Genero genero = convertToEntity(generoDTO);
+            Genero genero = new Genero();
+            genero.setNombre(generoDTO.getNombre());
+            genero.setAnoOrigen(generoDTO.getAnoOrigen());
             Genero nuevoGenero = generoService.createGenero(genero);
-            GeneroDTO nuevoGeneroDTO = convertToDTO(nuevoGenero);
-            return new ResponseEntity<>(nuevoGeneroDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(nuevoGenero, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

@@ -8,15 +8,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.streaming_service.DTO.Album.AlbumDTO;
-import com.example.streaming_service.DTO.Artista.ArtistaDTO;
+import com.example.streaming_service.DTO.Album.AlbumCreateDTO;
+import com.example.streaming_service.DTO.Artista.ArtistaCreateDTO;
 import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
+import com.example.streaming_service.DTO.Genero.GeneroCreateDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.entidades.Cancion;
+import com.example.streaming_service.entidades.Genero;
 import com.example.streaming_service.repositorios.AlbumRepository;
 import com.example.streaming_service.repositorios.ArtistaRepository;
 import com.example.streaming_service.repositorios.CancionRepository;
+import com.example.streaming_service.repositorios.GeneroRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,6 +37,10 @@ public class ArtistaService {
     @Autowired
     private CancionRepository cancionRepo;
 
+    @Autowired
+    private GeneroRepository generoRepo;
+
+
     @Operation(summary = "Crear un nuevo artista", 
         description = "Crea un artista con un álbum y canciones",
         responses = {
@@ -41,47 +48,70 @@ public class ArtistaService {
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
 
-    public Artista createArtistaWithAlbumCanciones(ArtistaDTO artistaDTO, 
-    List<AlbumDTO> albumDTOs, List<CancionGeneroDTO> cancionDTOs){
-        //Crear aritista
-        Artista artista = new Artista();
-        artista.setNombre(artistaDTO.getNombre());
-        artista.setFechaNacimiento(artistaDTO.getFechaNacimiento());
-        artista.setNacionalidad(artistaDTO.getNacionalidad());
-        
-        //Guardar Artista
-        artista = artistaRepo.save(artista);
-        //Crear Albumes y agregar al artista
-        List<Album> albums = new ArrayList<>();
-        for (AlbumDTO albumDTO : albumDTOs) {
-            Album album = new Album();
-            album.setTitulo(albumDTO.getTitulo());
-            album.setAnoLanzamiento(albumDTO.getAnoLanzamiento());
-            album.setDescripcion(albumDTO.getDescripcion());
-            album.setArtista(artista); 
-        
-            //Guardar el álbum
-            album = albumRepo.save(album);
+       public Artista createArtistaWithAlbumCanciones(ArtistaCreateDTO artistaDTO, 
+    List<AlbumCreateDTO> albumDTOs, List<CancionGeneroDTO> cancionDTOs) {
 
-            //Agregar canciones al album
-            List<Cancion> canciones = new ArrayList<>();
-            for (CancionGeneroDTO cancionDTO : cancionDTOs) {
-                Cancion cancion = new Cancion();
-                cancion.setTitulo(cancionDTO.getTitulo());
-                cancion.setDuracion(cancionDTO.getDuracion());
-                cancion.setAlbum(album); //Asignar la canción al álbum
-                
-                //Guardar la cancion
-                cancion = cancionRepo.save(cancion);
-                canciones.add(cancion);
+    // Crear y guardar el artista
+    Artista artista = new Artista();
+    artista.setNombre(artistaDTO.getNombre());
+    artista.setFechaNacimiento(artistaDTO.getFechaNacimiento());
+    artista.setNacionalidad(artistaDTO.getNacionalidad());
+    artista = artistaRepo.save(artista);
+
+    // Crear álbumes y asignarlos al artista
+    List<Album> albums = new ArrayList<>();
+    for (AlbumCreateDTO albumDTO : albumDTOs) {
+        Album album = new Album();
+        album.setTitulo(albumDTO.getTitulo());
+        album.setAnoLanzamiento(albumDTO.getAnoLanzamiento());
+        album.setDescripcion(albumDTO.getDescripcion());
+        album.setUrlPortada(albumDTO.getUrlPortada());
+        album.setArtista(artista);
+        
+        // Guardar el álbum
+        album = albumRepo.save(album);
+
+        // Agregar canciones al álbum
+        List<Cancion> canciones = new ArrayList<>();
+        for (CancionGeneroDTO cancionDTO : cancionDTOs) {
+            Cancion cancion = new Cancion();
+            cancion.setTitulo(cancionDTO.getTitulo());
+            cancion.setDuracion(cancionDTO.getDuracion());
+            cancion.setUrlCancion(cancionDTO.getUrlCancion());
+            cancion.setAlbum(album); // Relacionar canción con el álbum
+
+            // Crear géneros y asignarlos a la canción
+            List<Genero> generos = new ArrayList<>();
+            for (GeneroCreateDTO generoDTO : cancionDTO.getGeneros()) {
+                Genero genero = new Genero();
+                genero.setNombre(generoDTO.getNombre());
+                genero.setAnoOrigen(generoDTO.getAnoOrigen());
+
+                // Guardar género
+                genero = generoRepo.save(genero);
+                generos.add(genero);
             }
-            album.setCanciones(canciones); //Agregar canciones al album
-            albums.add(album);
-        }
-        artista.setAlbumes(albums);
-        return artistaRepo.save(artista);
+            cancion.setGeneros(generos); // Asignar géneros a la canción
 
+            // Guardar la canción
+            cancion = cancionRepo.save(cancion);
+            canciones.add(cancion);
+        }
+
+        album.setCanciones(canciones); // Relacionar canciones con el álbum
+        album.setNumeroCanciones(canciones.size()); // Establecer número de canciones
+        albums.add(album);
     }
+
+    // Asignar los álbumes al artista
+    artista.setAlbumes(albums);
+
+    // Guardar el artista con toda la jerarquía y devolverlo
+    return artistaRepo.save(artista);
+}
+
+
+        
 
     @Operation(summary = "Crear un nuevo artista", 
         description = "Crea un artista con la información proporcionada",

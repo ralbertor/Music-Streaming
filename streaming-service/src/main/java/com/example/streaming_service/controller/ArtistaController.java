@@ -1,5 +1,6 @@
 package com.example.streaming_service.controller;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.streaming_service.DTO.Album.AlbumDTO;
 import com.example.streaming_service.DTO.Artista.ArtistaAlbumCancionDTO;
+import com.example.streaming_service.DTO.Artista.ArtistaCreateDTO;
 import com.example.streaming_service.DTO.Artista.ArtistaDTO;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.service.ArtistaService;
@@ -46,12 +49,14 @@ public class ArtistaController {
     @Operation(summary="Crear un nuevo artista", 
     description="Permite crear un artista con los detalles proporcionados.")
     @PostMapping("/add")
-    public ResponseEntity<ArtistaDTO> crearArtista(@RequestBody ArtistaDTO artistaDTO) {
+    public ResponseEntity<Artista> crearArtista(@RequestBody ArtistaCreateDTO artistaDTO) {
         try {
-            Artista artista = convertToEntity(artistaDTO);
+            Artista artista = new Artista();
+            artista.setNombre(artistaDTO.getNombre());
+            artista.setFechaNacimiento(artistaDTO.getFechaNacimiento());
+            artista.setNacionalidad(artistaDTO.getNacionalidad());
             Artista nuevoArtista = artistaService.createArtista(artista);
-            ArtistaDTO nuevoArtistaDTO = convertToDTO(nuevoArtista);
-            return new ResponseEntity<>(nuevoArtistaDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(nuevoArtista, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -109,12 +114,28 @@ public class ArtistaController {
     @Operation(summary="Listar Artistas",
     description="Permite listar todos los artistas")
     @GetMapping("/todos")
-    public ResponseEntity<List<ArtistaDTO>> listarArtistas() {
-       List<Artista> artistas = artistaService.listarArtistas();
-       List<ArtistaDTO> artistaDTO = artistas.stream()
-       .map(this::convertToDTO)
-       .collect(Collectors.toList());
-       return ResponseEntity.ok().body(artistaDTO);
-    }
+public ResponseEntity<List<ArtistaDTO>> listarArtistas() {
+    List<Artista> artistas = artistaService.listarArtistas();
+    List<ArtistaDTO> artistasDTO = artistas.stream().map(artista -> {
+        ArtistaDTO dto = new ArtistaDTO();
+        dto.setId(artista.getId());
+        dto.setNombre(artista.getNombre());
+        dto.setFechaNacimiento(artista.getFechaNacimiento());
+        dto.setNacionalidad(artista.getNacionalidad());
+        dto.setAlbumes(artista.getAlbumes().stream().map(album -> {
+            AlbumDTO albumDTO = new AlbumDTO();
+            albumDTO.setId(album.getId());
+            albumDTO.setTitulo(album.getTitulo());
+            albumDTO.setAnoLanzamiento(album.getAnoLanzamiento());
+            albumDTO.setDescripcion(album.getDescripcion());
+            albumDTO.setNumeroCanciones(album.getNumeroCanciones());
+            albumDTO.setUrlPortada(album.getUrlPortada());
+            return albumDTO;
+        }).collect(Collectors.toList()));
+        return dto;
+    }).collect(Collectors.toList());
+    return ResponseEntity.ok(artistasDTO);
+}
+
        
 }

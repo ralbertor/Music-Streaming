@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.streaming_service.DTO.Cancion.CancionDTO;
+import com.example.streaming_service.DTO.Cancion.CancionCreateDTO;
 import com.example.streaming_service.DTO.Cancion.CancionGeneroDTO;
 import com.example.streaming_service.entidades.Cancion;
 import com.example.streaming_service.entidades.Genero;
@@ -50,7 +50,7 @@ public class CancionService {
             @ApiResponse(responseCode="201", description = "Canción creada exitosamente"),
             @ApiResponse(responseCode= "400", description= "Datos inválidos")
         })
-    public Cancion createCancion(CancionDTO cancionDTO) {
+    public Cancion createCancion(CancionCreateDTO cancionDTO) {
        Cancion cancion = new Cancion();
        cancion.setTitulo(cancionDTO.getTitulo());
        cancion.setDuracion(cancionDTO.getDuracion());

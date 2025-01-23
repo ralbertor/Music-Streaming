@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,6 +44,7 @@ public class Artista {
 
     @Schema(description="Albumes del artista")
     @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
+    @JsonManagedReference //Relación principal
     private List<Album> albumes;
 
     @Schema(description = "Canciones del artista")
