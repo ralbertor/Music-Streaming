@@ -2,6 +2,8 @@ package com.example.streaming_service.entidades;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,6 +42,7 @@ public class Cancion {
 
     @ManyToOne
     @Schema(description="Álbum al que pertenece la canción")
+    @JsonBackReference
     private Album album;
 
    @ManyToMany

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.streaming_service.DTO.Album.AlbumCancionDTO;
 import com.example.streaming_service.DTO.Album.AlbumCreateDTO;
 import com.example.streaming_service.DTO.Album.AlbumDTO;
+import com.example.streaming_service.DTO.Cancion.CancionDTO;
 import com.example.streaming_service.entidades.Album;
 import com.example.streaming_service.service.AlbumService;
 
@@ -65,17 +66,24 @@ public class AlbumController {
     }
     @Operation(summary="Crear un nuevo album con sus canciones", 
     description="Permite crear un album con los detalles proporcionados.")
-    @PostMapping("/crearConCanciones")
-    public ResponseEntity<Album> crearArtistaConAlbumYCanciones(
-        @RequestBody AlbumCancionDTO albumDTO) {
-            if(albumDTO == null){
-                throw new IllegalArgumentException("AlbumDTO no puede ser nulo");
-            }
-        Album album = albumService.createAlbumWithCanciones(
-            albumDTO.getAlbum(), albumDTO.getCanciones());
-        
-        return new ResponseEntity<>(album, HttpStatus.CREATED);
+    @PostMapping("/CrearConCanciones")
+    public ResponseEntity<Album> createAlbumWithCanciones(
+            @RequestBody AlbumCancionDTO albumCreateRequest) {
+        try {
+            // Llamar al servicio para crear el álbum con canciones
+            Album album = albumService.createAlbumWithCanciones(
+                albumCreateRequest.getAlbum(),
+                albumCreateRequest.getCanciones()
+            );
+    
+            // Devolver el álbum creado
+            return new ResponseEntity<>(album, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Manejo de errores
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+    
     @Operation(summary="Actualizar un álbum", 
     description="Permite actualizar un álbum con los detalles proporcionados.")
     @PutMapping("/update/{id}")
@@ -121,8 +129,24 @@ public class AlbumController {
     public ResponseEntity<List<AlbumDTO>> listarAlbumes() {
         List<Album> albumes = albumService.listarAlbumes();
         List<AlbumDTO> albumDTO = albumes.stream().
-        map(this::convertToDTO)
-        .collect(Collectors.toList());
+        map(album ->{
+            AlbumDTO dto = new AlbumDTO();
+            dto.setId(album.getId());
+            dto.setTitulo(album.getTitulo());
+            dto.setAnoLanzamiento(album.getAnoLanzamiento());
+            dto.setDescripcion(album.getDescripcion());
+            dto.setNumeroCanciones(album.getNumeroCanciones());
+            dto.setUrlPortada(album.getUrlPortada());
+            dto.setCanciones(album.getCanciones().stream().map(cancion -> {
+                CancionDTO cancionDTO = new CancionDTO();
+                cancionDTO.setId(cancion.getId());
+                cancionDTO.setTitulo(cancion.getTitulo());
+                cancionDTO.setDuracion(cancion.getDuracion());
+                cancionDTO.setUrlCancion(cancion.getUrlCancion());
+                return cancionDTO;
+            }).collect(Collectors.toList()));
+            return dto;
+        }).collect(Collectors.toList());
         return ResponseEntity.ok().body(albumDTO);
     }
     

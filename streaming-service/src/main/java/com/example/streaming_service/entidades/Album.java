@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -55,6 +56,7 @@ public class Album {
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     @Schema(description= "Canciones del álbum")
+    @JsonManagedReference //Relación directa
     private List<Cancion> canciones;
 
     public int getId() {

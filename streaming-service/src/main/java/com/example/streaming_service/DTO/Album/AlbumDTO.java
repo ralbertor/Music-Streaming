@@ -1,5 +1,9 @@
 package com.example.streaming_service.DTO.Album;
 
+import java.util.List;
+
+import com.example.streaming_service.DTO.Cancion.CancionDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -18,5 +22,66 @@ public class AlbumDTO {
     private int numeroCanciones;
     @Schema(description="URL de la portada del álbum", example="www.sonsuenos.com")
     private String urlPortada;
+
+    private List<CancionDTO> canciones;
+
+    public AlbumDTO(){}
+    
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return this.titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getAnoLanzamiento() {
+        return this.anoLanzamiento;
+    }
+
+    public void setAnoLanzamiento(int anoLanzamiento) {
+        this.anoLanzamiento = anoLanzamiento;
+    }
+
+    public String getDescripcion() {
+        return this.descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getNumeroCanciones() {
+        return this.numeroCanciones;
+    }
+
+    public void setNumeroCanciones(int numeroCanciones) {
+        this.numeroCanciones = numeroCanciones;
+    }
+
+    public String getUrlPortada() {
+        return this.urlPortada;
+    }
+
+    public void setUrlPortada(String urlPortada) {
+        this.urlPortada = urlPortada;
+    }
+
+    public List<CancionDTO> getCanciones() {
+        return this.canciones;
+    }
+
+    public void setCanciones(List<CancionDTO> canciones) {
+        this.canciones = canciones;
+    }
     
 }

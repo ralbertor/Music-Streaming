@@ -23,4 +23,95 @@ public class ArtistaDTO {
 
     private List<AlbumDTO> albumes;
 
+
+    public ArtistaDTO() {
+    }
+
+    public ArtistaDTO(int id, String nombre, Date fechaNacimiento, String nacionalidad, List<AlbumDTO> albumes) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.nacionalidad = nacionalidad;
+        this.albumes = albumes;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Date getFechaNacimiento() {
+        return this.fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getNacionalidad() {
+        return this.nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+
+    public List<AlbumDTO> getAlbumes() {
+        return this.albumes;
+    }
+
+    public void setAlbumes(List<AlbumDTO> albumes) {
+        this.albumes = albumes;
+    }
+
+    public ArtistaDTO id(int id) {
+        setId(id);
+        return this;
+    }
+
+    public ArtistaDTO nombre(String nombre) {
+        setNombre(nombre);
+        return this;
+    }
+
+    public ArtistaDTO fechaNacimiento(Date fechaNacimiento) {
+        setFechaNacimiento(fechaNacimiento);
+        return this;
+    }
+
+    public ArtistaDTO nacionalidad(String nacionalidad) {
+        setNacionalidad(nacionalidad);
+        return this;
+    }
+
+    public ArtistaDTO albumes(List<AlbumDTO> albumes) {
+        setAlbumes(albumes);
+        return this;
+    }
+
+  
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", nombre='" + getNombre() + "'" +
+            ", fechaNacimiento='" + getFechaNacimiento() + "'" +
+            ", nacionalidad='" + getNacionalidad() + "'" +
+            ", albumes='" + getAlbumes() + "'" +
+            "}";
+    }
+    
+
 }
