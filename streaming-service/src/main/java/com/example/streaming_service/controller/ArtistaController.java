@@ -6,9 +6,6 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Album.AlbumDTO;
@@ -78,7 +74,6 @@ public class ArtistaController {
     description="Permite actualizar un artista.")
     @PutMapping("/update/{id}")
     public ResponseEntity<ArtistaDTO> actualizarArtista(@PathVariable int id, @RequestBody ArtistaDTO artistaDTO) {
-
         Artista artista = convertToEntity(artistaDTO);
         Artista artistaActualizado = artistaService.updateArtista(id, artista);
         if (artistaActualizado != null) {
@@ -101,15 +96,15 @@ public class ArtistaController {
     }
     @Operation(summary="Buscar un artista", 
     description="Permite buscar un artista con el filtro proporcionado.")
-    @GetMapping("/artistas/{id}")
-    public ResponseEntity<Page<ArtistaDTO>> buscarArtistas(
-            @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Artista> artistas = artistaService.buscarArtistasPorFiltro(filtro, pageable);
-        Page<ArtistaDTO> artistasDTO = artistas.map(this::convertToDTO);
-        return ResponseEntity.ok(artistasDTO);
+    @GetMapping("/{id}")
+    public ResponseEntity<ArtistaDTO> obtenerArtistaPorId(@PathVariable int id) {
+        Artista artista = artistaService.obtenerArtistaPorId(id);
+        if (artista != null) {
+            ArtistaDTO artistaDTO = convertToDTO(artista);
+            return ResponseEntity.ok(artistaDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
     @Operation(summary="Listar Artistas",
     description="Permite listar todos los artistas")

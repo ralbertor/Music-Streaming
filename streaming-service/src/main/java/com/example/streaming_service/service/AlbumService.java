@@ -164,5 +164,15 @@ public class AlbumService {
     public List<Album> listarAlbumes() {
         return albumRepo.findAll();
     }
+    @Operation(summary = "Obtener un álbum por ID",
+            description = "Obtener un álbum por ID",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Álbum encontrado"),
+                @ApiResponse(responseCode = "400", description = "Datos inválidos")
+            })
+    public Album obtenerArtistaPorId(int id) {
+    return albumRepo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Artista con ID " + id + " no encontrado"));
+    }
 
 }

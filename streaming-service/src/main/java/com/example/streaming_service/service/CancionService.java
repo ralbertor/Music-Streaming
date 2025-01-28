@@ -110,4 +110,13 @@ public class CancionService {
     public List<Cancion> listarCanciones(){
         return cancionRepo.findAll();
     }
+    @Operation(summary = "Buscar una canción", 
+        description = "Busca una canción con el filtro dado",
+        responses = {
+            @ApiResponse(responseCode="200", description = "Canción encontrada"),
+            @ApiResponse(responseCode= "400", description= "Datos inválidos")
+        })
+    public Cancion obtenerCancionPorId(int id) {
+        return cancionRepo.findById(id).orElse(null);
+    }
 }

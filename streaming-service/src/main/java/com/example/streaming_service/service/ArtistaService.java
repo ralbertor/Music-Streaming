@@ -189,4 +189,15 @@ public class ArtistaService {
     public List<Artista> listarArtistas() {
         return artistaRepo.findAll();
     }
+    @Operation(summary = "Obtener un artista por ID",
+        description = "Devuelve los detalles de un artista específico usando su ID",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Artista encontrado"),
+            @ApiResponse(responseCode = "404", description = "Artista no encontrado")
+        })
+    public Artista obtenerArtistaPorId(int id) {
+    return artistaRepo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Artista con ID " + id + " no encontrado"));
+    }
+
 }

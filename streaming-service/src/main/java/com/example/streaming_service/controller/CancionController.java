@@ -5,9 +5,6 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Cancion.CancionCreateDTO;
@@ -93,13 +89,14 @@ public class CancionController {
     @Operation(summary="Buscar una canción", 
     description="Permite buscar una canción con el filtro proporcionados.")
     @GetMapping("/{id}")
-    public ResponseEntity<Page<CancionDTO>> buscarCancion(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Cancion> canciones = cancionService.buscarCancionPorFiltro(filtro, pageable);
-        Page<CancionDTO> cancionesDTO = canciones.map(this::convertToDTO);
-        return ResponseEntity.ok(cancionesDTO);
+    public ResponseEntity<CancionDTO> obtenerArtistaPorId(@PathVariable int id) {
+        Cancion cancion = cancionService.obtenerCancionPorId(id);
+        if (cancion != null) {
+            CancionDTO cancionDTO = convertToDTO(cancion);
+            return ResponseEntity.ok(cancionDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
     @Operation(summary="Listar canciones",
     description="Permite listar todas las canciones")
