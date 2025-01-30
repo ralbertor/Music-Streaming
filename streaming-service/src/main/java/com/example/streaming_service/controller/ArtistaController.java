@@ -1,7 +1,6 @@
 package com.example.streaming_service.controller;
 
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Album.AlbumDTO;
@@ -23,7 +23,9 @@ import com.example.streaming_service.DTO.Artista.ArtistaCreateDTO;
 import com.example.streaming_service.DTO.Artista.ArtistaDTO;
 import com.example.streaming_service.entidades.Artista;
 import com.example.streaming_service.service.ArtistaService;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -109,9 +111,13 @@ public class ArtistaController {
     @Operation(summary="Listar Artistas",
     description="Permite listar todos los artistas")
     @GetMapping("/todos")
-public ResponseEntity<List<ArtistaDTO>> listarArtistas() {
-    List<Artista> artistas = artistaService.listarArtistas();
-    List<ArtistaDTO> artistasDTO = artistas.stream().map(artista -> {
+public ResponseEntity<Page<ArtistaDTO>> listarArtistas(
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "10") int size) {
+    // Crear objeto
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Artista> artistas = artistaService.listarArtistas(pageable);
+    Page<ArtistaDTO> artistasDTO = artistas.map(artista -> {
         ArtistaDTO dto = new ArtistaDTO();
         dto.setId(artista.getId());
         dto.setNombre(artista.getNombre());
@@ -128,7 +134,7 @@ public ResponseEntity<List<ArtistaDTO>> listarArtistas() {
             return albumDTO;
         }).collect(Collectors.toList()));
         return dto;
-    }).collect(Collectors.toList());
+    });
     return ResponseEntity.ok(artistasDTO);
 }
 

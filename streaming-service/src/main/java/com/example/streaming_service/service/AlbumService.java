@@ -161,8 +161,8 @@ public class AlbumService {
                 @ApiResponse(responseCode = "200", description = "Todos los albumes listados"),
                 @ApiResponse(responseCode = "400", description = "Datos inválidos")
             })
-    public List<Album> listarAlbumes() {
-        return albumRepo.findAll();
+    public Page<Album> listarAlbumes(Pageable pageable) {
+        return albumRepo.findAll(pageable);
     }
     @Operation(summary = "Obtener un álbum por ID",
             description = "Obtener un álbum por ID",

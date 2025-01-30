@@ -1,10 +1,10 @@
 package com.example.streaming_service.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.streaming_service.DTO.Cancion.CancionCreateDTO;
@@ -101,11 +102,21 @@ public class CancionController {
     @Operation(summary="Listar canciones",
     description="Permite listar todas las canciones")
     @GetMapping("/todos")
-    public ResponseEntity<List<CancionDTO>> listarCanciones() {
-        List<Cancion> canciones = cancionService.listarCanciones();
-        List<CancionDTO> cancionDTO = canciones.stream()
-        .map(this::convertToDTO)
-        .collect(Collectors.toList());
+    public ResponseEntity<Page<CancionDTO>> listarCanciones(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cancion> canciones = cancionService.listarCanciones(pageable);
+        Page<CancionDTO> cancionDTO = canciones
+        .map(cancion -> {
+            CancionDTO dto = new CancionDTO();
+            dto.setId(cancion.getId());
+            dto.setTitulo(cancion.getTitulo());
+            dto.setDuracion(cancion.getDuracion());
+            dto.setUrlCancion(cancion.getUrlCancion());
+            return dto;
+        });
         return ResponseEntity.ok().body(cancionDTO);
     }
 }

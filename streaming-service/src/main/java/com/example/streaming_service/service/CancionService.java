@@ -107,8 +107,8 @@ public class CancionService {
                 @ApiResponse(responseCode = "200", description = "Canciones listadas correctamente"),
                 @ApiResponse(responseCode="400", description= "Datos inválidos")
         })
-    public List<Cancion> listarCanciones(){
-        return cancionRepo.findAll();
+    public Page<Cancion> listarCanciones(Pageable pageable){
+        return cancionRepo.findAll(pageable);
     }
     @Operation(summary = "Buscar una canción", 
         description = "Busca una canción con el filtro dado",

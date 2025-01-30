@@ -186,8 +186,8 @@ public class ArtistaService {
                 @ApiResponse(responseCode = "200", description = "Todos los artistas listados"),
                 @ApiResponse(responseCode = "400", description = "Datos inválidos")
             })
-    public List<Artista> listarArtistas() {
-        return artistaRepo.findAll();
+    public Page<Artista> listarArtistas( Pageable pageable) {
+        return artistaRepo.findAll(pageable);
     }
     @Operation(summary = "Obtener un artista por ID",
         description = "Devuelve los detalles de un artista específico usando su ID",
